@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chef AI - Recipe Generator</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f7f3ee;
+      color: #2b2b2b;
+    }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+    .hero {
+      background: linear-gradient(135deg, #fff7ef, #f4e2d0);
+      border-radius: 18px;
+      padding: 24px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+      margin-bottom: 24px;
+    }
+    h1 {
+      margin: 0 0 10px;
+      font-size: 2rem;
+    }
+    p {
+      line-height: 1.5;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    @media (max-width: 700px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+    .card {
+      background: white;
+      border-radius: 16px;
+      padding: 18px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+    }
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 6px;
+      margin-top: 12px;
+    }
+    input, select, textarea, button {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid #d7cbbf;
+      font-size: 1rem;
+    }
+    textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+    button {
+      background: #b86a2d;
+      color: white;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 16px;
+    }
+    button:hover {
+      background: #9f5821;
+    }
+    .recipe-box {
+      white-space: pre-wrap;
+      line-height: 1.6;
+      font-size: 0.98rem;
+    }
+    .pill {
+      display: inline-block;
+      background: #f0e2d5;
+      color: #6b3b12;
+      border-radius: 999px;
+      padding: 6px 12px;
+      font-size: 0.85rem;
+      margin: 4px 6px 0 0;
+    }
+    .footer {
+      text-align: center;
+      font-size: 0.9rem;
+      color: #777;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="hero">
+      <h1>Chef AI - Recipe Generator</h1>
+      <p>Create a recipe instantly from the ingredients you already have. No API key needed. Works directly on GitHub Pages.</p>
+      <div>
+        <span class="pill">No API Key</span>
+        <span class="pill">GitHub Pages Ready</span>
+        <span class="pill">Mobile Friendly</span>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <h2>Enter Your Ingredients</h2>
+
+        <label for="ingredients">Ingredients</label>
+        <textarea id="ingredients" placeholder="Example: chicken, rice, garlic, onion, spinach, lemon"></textarea>
+
+        <label for="cuisine">Cuisine</label>
+        <select id="cuisine">
+          <option value="Any">Any</option>
+          <option value="American">American</option>
+          <option value="Italian">Italian</option>
+          <option value="Mediterranean">Mediterranean</option>
+          <option value="Indian">Indian</option>
+          <option value="Mexican">Mexican</option>
+          <option value="Asian">Asian</option>
+        </select>
+
+        <label for="mealType">Meal Type</label>
+        <select id="mealType">
+          <option value="Dinner">Dinner</option>
+          <option value="Lunch">Lunch</option>
+          <option value="Breakfast">Breakfast</option>
+          <option value="Snack">Snack</option>
+        </select>
+
+        <label for="diet">Diet Preference</label>
+        <select id="diet">
+          <option value="None">None</option>
+          <option value="High Protein">High Protein</option>
+          <option value="Vegetarian">Vegetarian</option>
+          <option value="Low Carb">Low Carb</option>
+          <option value="Healthy">Healthy</option>
+        </select>
+
+        <button onclick="generateRecipe()">Generate Recipe</button>
+      </div>
+
+      <div class="card">
+        <h2>Your Recipe</h2>
+        <div id="output" class="recipe-box">Your recipe will appear here.</div>
+      </div>
+    </div>
+
+    <div class="footer">
+      Built for Bushra's GitHub Pages recipe project
+    </div>
+  </div>
+
+  <script>
+    function titleCase(text) {
+      return text
+        .toLowerCase()
+        .split(" ")
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(" ");
+    }
+
+    function generateRecipe() {
+      const ingredientsInput = document.getElementById("ingredients").value.trim();
+      const cuisine = document.getElementById("cuisine").value;
+      const mealType = document.getElementById("mealType").value;
+      const diet = document.getElementById("diet").value;
+      const output = document.getElementById("output");
+
+      if (!ingredientsInput) {
+        output.textContent = "Please enter some ingredients first.";
+        return;
+      }
+
+      const ingredients = ingredientsInput
+        .split(",")
+        .map(item => item.trim())
+        .filter(Boolean);
+
+      const mainIngredient = ingredients[0] || "mixed ingredients";
+
+      let dishName = "";
+      let cookingStyle = "";
+      let extraNote = "";
+
+      if (cuisine === "Italian") {
+        dishName = titleCase(mainIngredient) + " Rustic Skillet";
+        cookingStyle = "Italian-inspired";
+      } else if (cuisine === "Mediterranean") {
+        dishName = titleCase(mainIngredient) + " Mediterranean Bowl";
+        cookingStyle = "Mediterranean-style";
+      } else if (cuisine === "Indian") {
+        dishName = titleCase(mainIngredient) + " Spiced Curry";
+        cookingStyle = "Indian-inspired";
+      } else if (cuisine === "Mexican") {
+        dishName = titleCase(mainIngredient) + " Fiesta Bowl";
+        cookingStyle = "Mexican-style";
+      } else if (cuisine === "Asian") {
+        dishName = titleCase(mainIngredient) + " Stir-Fry Delight";
+        cookingStyle = "Asian-inspired";
+      } else {
+        dishName = titleCase(mainIngredient) + " " + mealType + " Special";
+        cookingStyle = "homestyle";
+      }
+
+      if (diet === "High Protein") {
+        extraNote = "Focus on lean protein and keep the dish filling.";
+      } else if (diet === "Vegetarian") {
+        extraNote = "Keep the dish meat-free and balanced.";
+      } else if (diet === "Low Carb") {
+        extraNote = "Reduce heavy starches and keep it lighter.";
+      } else if (diet === "Healthy") {
+        extraNote = "Use lighter cooking methods and fresh ingredients.";
+      } else {
+        extraNote = "Season to taste and adjust based on what you have.";
+      }
+
+      const steps = [
+        "Prepare the ingredients by washing, chopping, and organizing everything.",
+        "Heat a pan and cook the main ingredients first until flavorful and lightly browned.",
+        "Add the remaining ingredients gradually, starting with firm vegetables and ending with delicate items.",
+        "Season the dish with salt, pepper, garlic, herbs, or spices based on your taste and preferred cuisine.",
+        "Cook until everything is tender and well combined.",
+        "Serve warm and enjoy your " + cookingStyle + " " + mealType.toLowerCase() + "."
+      ];
+
+      const estimatedTime = 20 + Math.min(ingredients.length * 3, 20);
+      const calories = 250 + (ingredients.length * 45);
+
+      output.innerHTML =
+        "<strong>Recipe Name:</strong> " + dishName + "<br><br>" +
+        "<strong>Cuisine:</strong> " + cuisine + "<br>" +
+        "<strong>Meal Type:</strong> " + mealType + "<br>" +
+        "<strong>Diet:</strong> " + diet + "<br>" +
+        "<strong>Estimated Time:</strong> " + estimatedTime + " mins<br>" +
+        "<strong>Estimated Calories:</strong> " + calories + " kcal<br><br>" +
+
+        "<strong>Ingredients:</strong><br>- " + ingredients.join("<br>- ") + "<br><br>" +
+
+        "<strong>Instructions:</strong><br>" +
+        "1. " + steps[0] + "<br>" +
+        "2. " + steps[1] + "<br>" +
+        "3. " + steps[2] + "<br>" +
+        "4. " + steps[3] + "<br>" +
+        "5. " + steps[4] + "<br>" +
+        "6. " + steps[5] + "<br><br>" +
+
+        "<strong>Chef Tip:</strong> " + extraNote;
+    }
+  </script>
+</body>
+</html>
